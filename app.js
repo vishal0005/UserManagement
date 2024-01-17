@@ -12,4 +12,4 @@ mongoose
     )
     .then(()=>app.listen(4546,()=>
     console.log("connectd and listening port 4546")))
-    .catch((err)=>console.log("connection error ",err))
+    .catch((err)=>console.log("connection error ",err));

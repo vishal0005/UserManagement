@@ -1,5 +1,6 @@
 const User = require('../model/User');
 const mongoose = require('mongoose');
+const responseService = require('../utilitys/response-service');
 
 class UserContoller{
     async getAllUsers(req,res){
@@ -7,16 +8,13 @@ class UserContoller{
         try {
             users = await User.find();
         } catch (error) {
+            console.error("fetch user error ",error)
             return next(error);
         }
         if (!users) {
             return res.status(500).json({ message: "User not found" });
         }
-    
-        return res.status(200).json({
-            message: "user api called successfully",
-            users: users
-        });
+        return res.json(responseService.success("user data fetch successfully",users));
     }
 
 
@@ -41,10 +39,7 @@ class UserContoller{
             if (!user) {
                 return res.status(500).json({ message: "Internal server error for add user" });
             }
-            return res.status(201).json({
-                message: "user added successfully",
-                user: user
-            });
+            return res.json(responseService.success("user added successfuly",user));
         } catch (error) {
             console.error("error ", error);
             if (error.code === 11000) {
@@ -81,10 +76,7 @@ class UserContoller{
         
             console.log('User deleted successfully');
             // Return the deleted user object
-            return res.status(200).json({
-                message: "user deleted successfully",
-                users: deletedUser
-            });
+            return res.json(responseService.success("user deleted successfully",deletedUser));
           } catch (error) {
             // Handle errors
             console.error('Error:', error.message);
@@ -100,9 +92,7 @@ class UserContoller{
             // Delete all documents from the User collection
             const result = await User.deleteMany({});
             console.log(`Deleted ${result.deletedCount} documents`);
-            return res.status(200).json({
-                message: "All user deleted successfully"
-            });    
+            return res.json(responseService.success("all user deleted successfully"));
           } catch (error) {
             console.error('Error:', error.message);
             return res.status(500).json({
